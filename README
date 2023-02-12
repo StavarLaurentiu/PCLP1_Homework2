@@ -1,0 +1,187 @@
+///////////////////////////////////////////////////////////////////////////////
+
+• Stavăr Laurențiu-Cristian - 312CC
+• Programarea calculatoarelor și limbaje de programare 1 - Tema 2
+
+• Tema consta în 3 probleme si o scurta implementare a jocului wordle:
+        1. Text Highlight -> problema1.c
+        2. Autocomplete -> problema2.c
+        3. Calculator pe biti -> problema3.c
+        4. Wordle -> wordle.c
+
+• problema1.c:
+
+! Program ce subliniaza cuvintele cheie dintr-un text !
+
+-> Durata implementare: 3h;
+
+-> Observatii:
+        - Am ales sa parcurg textul de doua ori, prima data cautand
+        seturi de un singur cuvant cheie, ulterior cautand seturi
+        de cate doua cuvinte cheie;
+        - Problema putea fi rezolvata si printr-o singura parcurgere
+        a textului dar implementarea ar fi fost mai grea, fara 
+        vreun beneficiu semnificativ;
+        - Fuctia SubliniereRandUnu() parcurge prima data textul si
+        identifica secventele de cate un cuvant cheie pe care mai
+        apoi le transmite functiei subliniereCuvant();
+        - Fuctia SubliniereRandDoi() parcurge a doua oara textul si
+        identifica secventele de cate doua cuvinte cheie pe care mai
+        apoi le transmite functiei subliniereCuvant();
+        - Functia subliniereCuvant primeste drept argumente numarul
+        cuvantului (pe rand) de unde incepe secventa ce trebuie
+        subliniata, si lungimea secventei(1 / 2);
+
+• problema2.c:
+
+! Implementarea unui sistem de autocomplete bazat pe un dictionar dat !
+
+-> Durata implementare: 6-8h;
+
+-> Observatii:
+        - O mare parte din rezolvarea acestei probleme consta in 
+        adaugarea unui nou element in dictionar, mai precis in felul
+        in care transmiteam vectorul de structuri
+        - In cadrul rezolvarii au trebuit tratate 3 cazuri:
+                1. "cuvânt" - care nu face match cu niciun cuvânt 
+                existent în dicționar, așa că va fi scris în output 
+                la fel ca în input și va fi adăugat în dicționar cu 
+                prioritatea 1, fiind prima saapariție în text;
+                2. "cuvânt*" - care se potrivește cu un cuvânt de 
+                prioritate mai mare, dar utilizatorul vrea cuvântul 
+                scris de el, deși are prioritate mai mică (acest cuvânt 
+                poate exista sau nu în dicționar, caz în care ar trebui
+                adăugat) -> se va afişa cuvânt şi ii va creşte 
+                prioritatea;
+                3. "cuv" - care se potrivește cu unul sau mai multe 
+                cuvinte din dicţionar (care încep cu cuv) şi se alege 
+                cel care are prioritatea cea mai mare. De asemenea, 
+                prioritatea cuvântului ales din dicționar va crește 
+                pentru cuvântul selectat.
+        - Functia start() parcurge fiecare cuvant, il incadreaza in
+        unul din cele 3 cazuri si apeleaza functiile aferente fiecarui
+        caz;
+        - Functia isInDictionary() primeste drept argument un cuvant 
+        si returneaza 1 daca cuvantul se afla in dictionar, respectiv
+        nu daca nu se afla in dictionar;
+        - Functia matchDictionary() DOAR verifica daca exista vreun
+        match pentru cuvant in dictionar;
+        - Functia searchDictionary() cauta cel mai bun match pentru
+        un cuvant in dictionar, iar ulterior cuvantul trimis drept
+        argument devine cuvantul pe care a dat match;
+
+• problema3.c:
+
+! Implementarea unui calculator pe biti ce suporta 4 operatii !
+
+-> Durata implementare: 4h;
+
+-> Observatii:
+        - Programul primeste drept date de intrare un numar ce se incadreaza pe
+        dimensiunea unsigned int;
+        - Reprezentarea in baza 2 a acestui numar va fi folosita pentru a se
+        extrage numerele si operatiile ce trebuie efectuate;
+        - Acest calculator poate efectua 4 tipuri de operatii:
+                1. Adunare - rezultatul acestei operatii va fi suma celor doua 
+                numere pe 4 biti. -- 00
+                2. Interschimbare - la aplicarea acestei operatii se va 
+                interschimba bitul de pe pozitia p1 cu bitul de pe pozitia 
+                p2 pentru primul numar, unde p1 reprezinta primii 2 biti din 
+                al doilea numar, iar p2 reprezinta ultimii doi biti din al 
+                doilea numar. -- 01
+                3. Rotatie la stanga - daca se aplica aceasta operațte pe 
+                doua numere, nr1, respectiv nr2, rezultatul va fi nr1 rotit 
+                la stanga de nr2 ori. -- 10
+                4. XOR - rezultatul acestei operații va fi aplicarea 
+                operatorului XOR celor două numere pe 4 biți. -- 11
+        - De exemplu: 3035218 (10) = ... 1011 10 0101 00 0001 01 0010 (2)
+        - Operatiile ce vor fi efectuate sunt:
+                1. 1011 rotit la stânga cu 0101 biți, adică 5 biți este 0111;
+                2. Rezultatul primei operatii, 0111, este adunat cu 0001, 
+                iar rezultatul este 1000;
+                3. Rezultatul celei de-a doua operații este 1000, aplicându-se 
+                operația de interschimbare. Se vor interschimba biții de pe 
+                poziția 0 și 2. Astfel
+                rezulttul va fi 0010, adică 2.
+
+• wordle.c:
+
+! Implementarea simplista a jocului Wordle !
+
+-> Durata implementare: 10h;
+
+-> Observatii:
+        - Am adaugat in Makefile atat la regula de build, cat si la cea de
+        clean, comenzile aferente pentru compilare si stergere corespunzatoare
+        wordle.c (pentru make se va compila si wordle.c, iar pentru make
+        clean se va sterge wordle);
+        - Interfata grafica a fost realizata prin intermediul bibliotecii
+        ncurses;
+        - La rularea jocului se va afisa un meniu de inceput (functia menu())
+        in care jucatorul poate incepe un nou joc sau poate iesi din aplicatie;
+        - Daca selecteaza "New Game", se va apela functia game() ce va genera
+        tabla de joc si va astepta inputul de la tastatura;
+        - La inceputul jocului se va alege un cuvant random din dictionar,
+        folosindu-se comanda rand(), plecand de la seedul time(0), adica
+        momentul de timp curent;
+        - Initial se printeaza boxurile, iar mai apoi pe baza inputului primit
+        se vor face urmatoarele actiuni:
+                1. Daca este introdusa o litera mica aceasta va fi pusa in
+                cuvant si va fi afisata (atata timp cat nu se depaseste
+                lungimea de 5 litere a cuvantului);
+                2. Daca este introdus BACKSPACE se va sterge ultima litera a
+                cuvantului atat din memorie cat si de pe ecran (daca nu mai
+                exista nicio litera de sters in cuvant nu se intampla nimic);
+                3. Daca este introdus ENTER, se verifica daca sunt destule
+                litere in cuvant, in caz afirmativ se apeleaza functia 
+                checkWord(), in caz negativ se afiseaza un mesaj;
+                4. Daca este introdus ":" se deschide meniul (se apeleaza
+                funtia de meniu);
+                5. Daca este introdus orice alt caracter nu se intampla nimic;
+        - Functia checkWord() verifica daca cuvantul introdus este cel cautat,
+        in caz afirmativ apeleaza functia gameWon(), in caz negativ coloreaza
+        literele pe baza regulilor jocului. De asemenea, daca a fost introdus
+        ultimul cuvant, iar acesta nu este cel cautat se apeleaza functia
+        gameLost();
+        - Functia gameWon() genereaza ecranul in care jucatorul este anuntat
+        ca tocmai a castigat si primeste optiunea de a incepe un joc nou sau
+        de a inchide jocul;
+        - Functia gameLost() genereaza ecranul in care jucatorul este anuntat
+        ca tocmai a pierdut, se afiseaza cuvantul ce trebuia gasit si primeste
+        optiunea de a incepe un joc nou sau de a inchide jocul;
+        - Functia choiceBox() genereaza boxul de alegere de contine "New Game"
+        si "Quit" aferent functiilor menu(), gameWon() si gameLost();
+
+-------------------------------------------------------------------------------
+                                  _
+                               .-(_)
+                              / _/
+                           .-'   \
+                          /       '.
+                        ,-~--~-~-~-~-,
+                       {__.._...__..._}             ,888,
+       ,888,          /\##"  6  6  "##/\          ,88' `88,
+     ,88' '88,__     |(\`    (__)    `/)|     __,88'     `88
+    ,88'   .8(_ \_____\_    '----'    _/_____/ _)8.       8'
+    88    (___)\ \      '-.__    __.-'      / /(___)
+    88    (___)88 |          '--'          | 88(___)
+    8'      (__)88,___/                \___,88(__)
+              __`88,_/__________________\_,88`__
+             /    `88,       |88|       ,88'    \
+            /        `88,    |88|    ,88'        \
+           /____________`88,_\88/_,88`____________\
+          /88888888888888888;8888;88888888888888888\
+         /^^^^^^^^^^^^^^^^^^`/88\\^^^^^^^^^^^^^^^^^^\
+        /                    |88| \============,     \
+       /_  __  __  __   _ __ |88|_|^  MERRY    | _ ___\
+       |                     |88| | CHRISTMAS! |      |
+       |                     |88| '============'      |
+       |                     |88|                     |
+       |                     |88|                     |
+       |                     |88|                     |
+       |                     |88|                     |
+       '---------------------""""---------------------'
+
+-------------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
